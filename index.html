@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyn Wallet</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#0c1b36;
+ color:#fff;
+}
+header{
+ padding:20px;
+ text-align:center;
+ font-size:25px;
+ font-weight:bold;
+}
+.clock{
+ margin:35px 20px 20px;
+ padding:30px 12px;
+ text-align:center;
+ border-radius:25px;
+ background:linear-gradient(120deg,#079fe5,#2761ec);
+}
+#greeting{font-size:21px}
+#time{font-size:42px;font-weight:bold;margin:8px 0}
+#date{font-size:19px}
+.login{
+ background:white;
+ color:#17243c;
+ margin:35px 20px;
+ padding:30px 22px;
+ border-radius:25px;
+ text-align:center;
+}
+input{
+ width:100%;
+ padding:17px;
+ margin:10px 0;
+ border:1px solid #ccc;
+ border-radius:12px;
+ font-size:17px;
+}
+button{
+ width:100%;
+ padding:16px;
+ border:0;
+ border-radius:12px;
+ background:#203e70;
+ color:white;
+ font-size:18px;
+ margin-top:12px;
+ cursor:pointer;
+}
+.note{font-size:11px;color:#64748b}
+.dashboard{display:none;padding:20px}
+.balance{
+ background:linear-gradient(120deg,#087fe5,#16a8e5);
+ padding:30px 15px;
+ text-align:center;
+ border-radius:22px;
+ margin:20px 0;
+}
+.balance h1{font-size:34px;margin:12px 0}
+.panel{
+ background:#17243b;
+ border-radius:20px;
+ padding:20px;
+ margin:18px 0;
+}
+.actions{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+.actions button{background:#203e70;font-size:15px}
+.card{
+ background:linear-gradient(120deg,#2156ca,#08a7dc);
+ padding:28px 20px;
+ border-radius:20px;
+ margin:15px 0;
+}
+.support{
+ position:fixed;
+ bottom:20px;
+ right:20px;
+ width:60px;
+ height:60px;
+ border-radius:50%;
+ background:#16c96a;
+ color:white;
+ font-size:27px;
+ border:0;
+}
+footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>Cyn Wallet</header>
+
+<div class="clock">
+ <div id="greeting">Welcome</div>
+ <div id="time">00:00:00</div>
+ <div id="date"></div>
+</div>
+
+<div class="login" id="login">
+ <h1>Welcome Back</h1>
+ <p>Secure Wallet Access</p>
+ <input id="username" placeholder="Username" autocomplete="username">
+ <input id="pin" type="password" placeholder="PIN" inputmode="numeric" maxlength="6">
+ <button onclick="loginUser()">Login</button>
+ <p class="note">Preview account • Simulated funds</p>
+</div>
+
+<div class="dashboard" id="dashboard">
+ <h2 id="welcome">Hello!</h2>
+
+ <div class="balance">
+  <div>Total Wallet Balance</div>
+  <h1>¥6,653,800.00</h1>
+  <small>CNY — Chinese Yuan</small>
+  <p>Simulated balance</p>
+ </div>
+
+ <div class="panel">
+  <h3>Virtual Card</h3>
+  <div class="card">
+   <div style="text-align:right">VISA • PREVIEW</div>
+   <h2>•••• •••• •••• 4451</h2>
+   <p>CYN WALLET</p>
+   <small>Sample card — no payment capability</small>
+  </div>
+  <button onclick="alert('Card controls preview')">Card Settings</button>
+ </div>
+
+ <div class="panel">
+  <h3>Wallet Services</h3>
+  <div class="actions">
+   <button onclick="service('Payments')">Payments</button>
+   <button onclick="service('Electricity Bills')">Electricity Bills</button>
+   <button onclick="service('Amazon Gift Cards')">Amazon Gift Cards</button>
+   <button onclick="service('Apple Gift Cards')">Apple Gift Cards</button>
+   <button onclick="service('Transactions')">Transactions</button>
+   <button onclick="service('Multi-Currency Wallet')">Currency Wallet</button>
+  </div>
+ </div>
+
+ <div class="panel">
+  <h3>Recent Activity</h3>
+  <p>No transactions yet.</p>
+ </div>
+
+ <div class="panel">
+  <h3>Customer Support</h3>
+  <p>WhatsApp Support</p>
+  <button onclick="service('WhatsApp Support')">Contact Support</button>
+ </div>
+
+ <button onclick="logout()">Logout</button>
+</div>
+
+<footer>Cyn Wallet · CNY ¥ · Preview</footer>
+
+<script>
+function updateClock(){
+ const now=new Date();
+ const hour=now.getHours();
+ document.getElementById('time').textContent=
+ now.toLocaleTimeString();
+ document.getElementById('date').textContent=
+ now.toLocaleDateString(undefined,{
+ weekday:'short',year:'numeric',
+ month:'short',day:'numeric'
+ });
+ document.getElementById('greeting').textContent=
+ hour<12?'Good Morning':
+ hour<17?'Good Afternoon':'Good Evening';
+}
+updateClock();
+setInterval(updateClock,1000);
+
+function loginUser(){
+ const name=document.getElementById('username').value.trim();
+ const pin=document.getElementById('pin').value;
+ if(!name || !/^\d{4,6}$/.test(pin)){
+  alert('Enter a username and a 4–6 digit preview PIN.');
+  return;
+ }
+ document.getElementById('welcome').textContent='Hello, '+name;
+ document.getElementById('login').style.display='none';
+ document.getElementById('dashboard').style.display='block';
+}
+function logout(){
+ document.getElementById('dashboard').style.display='none';
+ document.getElementById('login').style.display='block';
+ document.getElementById('pin').value='';
+}
+function service(name){
+ alert(name+' is coming soon.');
+}
+</script>
+</body>
+</html>
