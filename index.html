@@ -166,7 +166,6 @@ footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
 </div>
 
 <footer>Cyn Wallet · CNY ¥ · Preview</footer>
-
 <script>
 function updateClock(){
  const now=new Date();
@@ -205,5 +204,28 @@ function service(name){
  alert(name+' is coming soon.');
 }
 </script>
+ <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCM47pBWKGK8pgsK_u47GPUnNBA78vLRug",
+    authDomain: "cyn-wallet.firebaseapp.com",
+    projectId: "cyn-wallet",
+    storageBucket: "cyn-wallet.firebasestorage.app",
+    messagingSenderId: "921923481845",
+    appId: "1:921923481845:web:700498e8fc8f65024195bc",
+    measurementId: "G-STJWJB39MF"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+ </script>
 </body>
 </html>
