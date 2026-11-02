@@ -113,9 +113,9 @@ footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
  <h1>Welcome Back</h1>
  <p>Secure Wallet Access</p>
  <input id="username" placeholder="Username" autocomplete="username">
- <input id="pin" type="password" placeholder="PIN" inputmode="numeric" maxlength="6">
+ <input id="pin" type="password" placeholder="Wallet Password" autocomplete="current-password">
  <button onclick="loginUser()">Login</button>
- <p class="note">Preview account • Simulated funds</p>
+ <p class="note">Preview account •</p>
 </div>
 
 <div class="dashboard" id="dashboard">
@@ -125,7 +125,7 @@ footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
   <div>Total Wallet Balance</div>
   <h1>¥6,653,800.00</h1>
   <small>CNY — Chinese Yuan</small>
-  <p>Simulated balance</p>
+  <p></p>
  </div>
 
  <div class="panel">
@@ -134,7 +134,7 @@ footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
    <div style="text-align:right">VISA • PREVIEW</div>
    <h2>•••• •••• •••• 4451</h2>
    <p>CYN WALLET</p>
-   <small>Sample card — no payment capability</small>
+   <small>Sample card — </small>
   </div>
   <button onclick="alert('Card controls preview')">Card Settings</button>
  </div>
@@ -184,17 +184,35 @@ function updateClock(){
 updateClock();
 setInterval(updateClock,1000);
 
-function loginUser(){
- const name=document.getElementById('username').value.trim();
- const pin=document.getElementById('pin').value;
- if(!name || !/^\d{4,6}$/.test(pin)){
-  alert('Enter a username and a 4–6 digit preview PIN.');
-  return;
- }
- document.getElementById('welcome').textContent='Hello, '+name;
- document.getElementById('login').style.display='none';
- document.getElementById('dashboard').style.display='block';
+<input id="password" type="password" placeholder="Password">
+ 
+async function loginUser() {
+  const name = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (name !== 'Cheng Er34') {
+    alert('Incorrect username');
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      'demobank077@gmail.com',
+      password
+    );
+
+    document.getElementById('welcome').textContent =
+      'Hello, ' + name;
+
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+  } catch (error) {
+    alert('Login failed. Please check your password.');
+  }
 }
+ 
 function logout(){
  document.getElementById('dashboard').style.display='none';
  document.getElementById('login').style.display='block';
@@ -207,6 +225,10 @@ function service(name){
  <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import {
+  getAuth,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
@@ -226,6 +248,7 @@ function service(name){
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+  const auth = getAuth(app);
  </script>
 </body>
 </html>
