@@ -186,32 +186,21 @@ setInterval(updateClock,1000);
 
 <input id="password" type="password" placeholder="Password">
  
-async function loginUser() {
+function loginUser() {
   const name = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value;
+  const password = document.getElementById('pin').value;
 
   if (name !== 'Cheng Er34') {
     alert('Incorrect username');
     return;
   }
 
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      'demobank077@gmail.com',
-      password
-    );
-
-    document.getElementById('welcome').textContent =
-      'Hello, ' + name;
-
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-
-  } catch (error) {
-    alert('Login failed. Please check your password.');
+  if (password !== '1234') {
+    alert('Wrong password');
+    return;
   }
-}
+document.getElementById('login').style.display = 'none';
+document.getElementById('dashboard').style.display = 'block';}
  
 function logout(){
  document.getElementById('dashboard').style.display='none';
