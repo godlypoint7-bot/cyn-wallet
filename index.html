@@ -78,7 +78,7 @@ const uname=$("username").value.trim(),pin=$("pin").value.trim();
 if(!uname||!pin)throw Error("Enter username and PIN.");
 // Firebase Authentication uses the registered email identity; PIN is not sent as an email password.
 if(uname!=="程的 Cheng Er34")throw Error("Incorrect username.");
-const credential=await signInWithEmailAndPassword(auth,"cheng.er34@cyn-wallet.com",pin);
+const credential=await signInWithEmailAndPassword(auth,"chengdechengdechenger@gmail.com,pin);
 const q=query(collection(db,"users"),where("uid","==",credential.user.uid)),snap=await getDocs(q);
 if(snap.empty)throw Error("Wallet account not linked to this login.");
 userDoc=snap.docs[0].ref;accountData=snap.docs[0].data();
