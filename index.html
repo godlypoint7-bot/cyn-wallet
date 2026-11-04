@@ -1,243 +1,128 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cyn Wallet</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CYN Wallet</title>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#0c1b36;
- color:#fff;
-}
-header{
- padding:20px;
- text-align:center;
- font-size:25px;
- font-weight:bold;
-}
-.clock{
- margin:35px 20px 20px;
- padding:30px 12px;
- text-align:center;
- border-radius:25px;
- background:linear-gradient(120deg,#079fe5,#2761ec);
-}
-#greeting{font-size:21px}
-#time{font-size:42px;font-weight:bold;margin:8px 0}
-#date{font-size:19px}
-.login{
- background:white;
- color:#17243c;
- margin:35px 20px;
- padding:30px 22px;
- border-radius:25px;
- text-align:center;
-}
-input{
- width:100%;
- padding:17px;
- margin:10px 0;
- border:1px solid #ccc;
- border-radius:12px;
- font-size:17px;
-}
-button{
- width:100%;
- padding:16px;
- border:0;
- border-radius:12px;
- background:#203e70;
- color:white;
- font-size:18px;
- margin-top:12px;
- cursor:pointer;
-}
-.note{font-size:11px;color:#64748b}
-.dashboard{display:none;padding:20px}
-.balance{
- background:linear-gradient(120deg,#087fe5,#16a8e5);
- padding:30px 15px;
- text-align:center;
- border-radius:22px;
- margin:20px 0;
-}
-.balance h1{font-size:34px;margin:12px 0}
-.panel{
- background:#17243b;
- border-radius:20px;
- padding:20px;
- margin:18px 0;
-}
-.actions{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
-}
-.actions button{background:#203e70;font-size:15px}
-.card{
- background:linear-gradient(120deg,#2156ca,#08a7dc);
- padding:28px 20px;
- border-radius:20px;
- margin:15px 0;
-}
-.support{
- position:fixed;
- bottom:20px;
- right:20px;
- width:60px;
- height:60px;
- border-radius:50%;
- background:#16c96a;
- color:white;
- font-size:27px;
- border:0;
-}
-footer{text-align:center;padding:20px;color:#9baac0;font-size:12px}
+:root{--navy:#10233f;--blue:#1769aa;--bg:#f3f6fb;--ink:#17253b;--muted:#6b7890;--line:#e5eaf2;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.45 Arial,sans-serif;color:var(--ink)}
+header{background:var(--navy);color:white;padding:22px 20px 25px}
+.brand{font-size:20px;font-weight:700;letter-spacing:.4px}.sub{opacity:.75;font-size:12px;margin-top:4px}
+main{max-width:620px;margin:0 auto;padding:18px}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:15px;box-shadow:0 5px 20px #10233f08}
+h2{font-size:18px;margin:0 0 16px}label{display:block;font-weight:600;font-size:13px;margin:13px 0 6px}
+input{width:100%;padding:14px;border:1px solid #d8dfeb;border-radius:10px;font-size:16px;background:#fff}
+button{border:0;border-radius:10px;padding:14px 16px;font-size:15px;font-weight:700;cursor:pointer}
+.primary{background:var(--blue);color:#fff;width:100%;margin-top:18px}
+.secondary{background:#edf3fa;color:var(--blue)}
+.error{color:#b42318;font-size:13px;margin-top:10px}
+.hidden{display:none!important}
+.balance-label{color:#d5e4f8;font-size:13px}.balance{font-size:32px;font-weight:700;color:white;margin:7px 0 0}
+.details{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail-label{font-size:12px;color:var(--muted)}.detail-value{font-weight:600;word-break:break-word;margin-top:4px}
+nav{display:flex;gap:8px;margin:0 0 15px}nav button{flex:1;padding:11px 5px;font-size:13px}
+nav button.active{background:var(--navy);color:#fff}
+.tx{padding:13px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}.tx:last-child{border:0}.tx-title{font-weight:600}.tx-meta{font-size:12px;color:var(--muted);margin-top:3px}.amount{font-weight:700;white-space:nowrap}.empty{color:var(--muted);text-align:center;padding:22px 0}
+.notice{font-size:12px;color:var(--muted);margin-top:12px}
 </style>
 </head>
 <body>
-
-<header>Cyn Wallet</header>
-
-<div class="clock">
- <div id="greeting">Welcome</div>
- <div id="time">00:00:00</div>
- <div id="date"></div>
+<header><div class="brand">CYN WALLET</div><div class="sub">Personal wallet</div></header>
+<main>
+<section id="login" class="card">
+<h2>Sign in</h2>
+<form id="loginForm">
+<label for="username">Username</label><input id="username" autocomplete="username" value="程的 Cheng Er34" required>
+<label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" required>
+<button class="primary" type="submit">Sign in</button>
+<div id="loginError" class="error"></div>
+</form>
+<p class="notice">Authentication is handled by the secure server function.</p>
+</section>
+<section id="app" class="hidden">
+<div class="card" style="background:var(--navy);border:0">
+<div class="balance-label">Available balance</div><div id="balance" class="balance">¥—</div>
 </div>
+<nav><button class="active" data-tab="overview">Overview</button><button data-tab="history">History</button><button data-tab="account">Account</button></nav>
+<section id="overview" class="card"><h2>Account overview</h2><div class="details">
+<div><div class="detail-label">Account name</div><div id="accountName" class="detail-value">—</div></div>
+<div><div class="detail-label">Currency</div><div class="detail-value">CNY (¥)</div></div>
+<div><div class="detail-label">Account number</div><div id="accountNumber" class="detail-value">—</div></div>
+<div><div class="detail-label">Status</div><div id="status" class="detail-value">—</div></div>
+</div></section>
+<section id="history" class="card hidden"><h2>Transaction history</h2><div id="transactions" class="empty">Loading transactions…</div></section>
+<section id="account" class="card hidden"><h2>Account</h2><div class="details">
+<div><div class="detail-label">Username</div><div id="shownUsername" class="detail-value">—</div></div>
+<div><div class="detail-label">Currency</div><div class="detail-value">CNY (¥)</div></div></div>
+<button id="logout" class="secondary" style="width:100%;margin-top:18px">Sign out</button></section>
+</section>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 
-<div class="login" id="login">
- <h1>Welcome Back</h1>
- <p>Secure Wallet Access</p>
- <input id="username" placeholder="Username" autocomplete="username">
- <input id="pin" type="password" placeholder="Wallet Password" autocomplete="current-password">
- <button onclick="loginUser()">Login</button>
- <p class="note">Preview account •</p>
-</div>
+/* Replace these values with your Firebase project's Web app configuration. */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
+};
+const appFirebase = initializeApp(firebaseConfig);
+const db = getFirestore(appFirebase);
+const functions = getFunctions(appFirebase);
+const loginWithPin = httpsCallable(functions, "loginWithPin");
 
-<div class="dashboard" id="dashboard">
- <h2 id="welcome">Hello!</h2>
+const $ = id => document.getElementById(id);
+let currentUserId = null;
+const money = value => "¥" + Number(value || 0).toLocaleString("en-US",{maximumFractionDigits:2});
 
- <div class="balance">
-  <div>Total Wallet Balance</div>
-  <h1>¥6,653,800.00</h1>
-  <small>CNY — Chinese Yuan</small>
-  <p></p>
- </div>
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault(); $("loginError").textContent = "";
+  const username = $("username").value.trim();
+  const pin = $("pin").value;
+  const button = e.submitter; button.disabled = true; button.textContent = "Signing in…";
+  try {
+    // The callable function verifies the username/PIN on the server and returns the user document ID.
+    const result = await loginWithPin({username,pin});
+    currentUserId = result.data.userId;
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+    $("shownUsername").textContent = username;
+    const data = result.data.account || {};
+    $("balance").textContent = money(data.balance);
+    $("accountName").textContent = data.accountName || data.username || username;
+    $("accountNumber").textContent = data.accountNumber || "—";
+    $("status").textContent = data.status || "—";
+    await loadTransactions();
+  } catch (err) {
+    $("loginError").textContent = "Username or PIN is incorrect. Please try again.";
+  } finally { button.disabled = false; button.textContent = "Sign in"; $("pin").value = ""; }
+});
 
- <div class="panel">
-  <h3>Virtual Card</h3>
-  <div class="card">
-   <div style="text-align:right">VISA • PREVIEW</div>
-   <h2>•••• •••• •••• 4451</h2>
-   <p>CYN WALLET</p>
-   <small>Sample card — </small>
-  </div>
-  <button onclick="alert('Card controls preview')">Card Settings</button>
- </div>
-
- <div class="panel">
-  <h3>Wallet Services</h3>
-  <div class="actions">
-   <button onclick="service('Payments')">Payments</button>
-   <button onclick="service('Electricity Bills')">Electricity Bills</button>
-   <button onclick="service('Amazon Gift Cards')">Amazon Gift Cards</button>
-   <button onclick="service('Apple Gift Cards')">Apple Gift Cards</button>
-   <button onclick="service('Transactions')">Transactions</button>
-   <button onclick="service('Multi-Currency Wallet')">Currency Wallet</button>
-  </div>
- </div>
-
- <div class="panel">
-  <h3>Recent Activity</h3>
-  <p>No transactions yet.</p>
- </div>
-
- <div class="panel">
-  <h3>Customer Support</h3>
-  <p>WhatsApp Support</p>
-  <button onclick="service('WhatsApp Support')">Contact Support</button>
- </div>
-
- <button onclick="logout()">Logout</button>
-</div>
-
-<footer>Cyn Wallet · CNY ¥ · Preview</footer>
-<script>
-function updateClock(){
- const now=new Date();
- const hour=now.getHours();
- document.getElementById('time').textContent=
- now.toLocaleTimeString();
- document.getElementById('date').textContent=
- now.toLocaleDateString(undefined,{
- weekday:'short',year:'numeric',
- month:'short',day:'numeric'
- });
- document.getElementById('greeting').textContent=
- hour<12?'Good Morning':
- hour<17?'Good Afternoon':'Good Evening';
+async function loadTransactions(){
+  const box = $("transactions"); box.innerHTML="";
+  try{
+    const q = query(collection(db,"users",currentUserId,"transactions"),orderBy("createdAt","desc"));
+    const snap = await getDocs(q);
+    if(snap.empty){box.innerHTML='<div class="empty">No transactions yet.</div>';return;}
+    snap.forEach(doc=>{
+      const t=doc.data(), row=document.createElement("div"); row.className="tx";
+      const left=document.createElement("div"), right=document.createElement("div");
+      left.innerHTML='<div class="tx-title"></div><div class="tx-meta"></div>';
+      left.querySelector(".tx-title").textContent=t.description||t.type||"Transaction";
+      const date=t.createdAt?.toDate?.(); left.querySelector(".tx-meta").textContent=date?date.toLocaleString():"";
+      right.className="amount"; right.textContent=(t.direction==="deposit"?"+":"−")+money(String(t.amount||"").replace(/[^\d.-]/g,""));
+      row.append(left,right);box.append(row);
+    });
+  }catch(e){box.innerHTML='<div class="error">Could not load transaction history.</div>';}
 }
-updateClock();
-setInterval(updateClock,1000);
-
-<input id="password" type="password" placeholder="Password">
- 
-function loginUser() {
-  const name = document.getElementById('username').value.trim();
-  const password = document.getElementById('pin').value;
-
-  if (name !== 'Cheng Er34') {
-    alert('Incorrect username');
-    return;
-  }
-
-  if (password !== '1234') {
-    alert('Wrong password');
-    return;
-  }
-document.getElementById('login').style.display = 'none';
-document.getElementById('dashboard').style.display = 'block';}
- 
-function logout(){
- document.getElementById('dashboard').style.display='none';
- document.getElementById('login').style.display='block';
- document.getElementById('pin').value='';
-}
-function service(name){
- alert(name+' is coming soon.');
-}
+document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b===btn));
+  ["overview","history","account"].forEach(id=>$(id).classList.toggle("hidden",id!==btn.dataset.tab));
+}));
+$("logout").addEventListener("click",()=>{currentUserId=null;$("app").classList.add("hidden");$("login").classList.remove("hidden");});
 </script>
- <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-  import {
-  getAuth,
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCM47pBWKGK8pgsK_u47GPUnNBA78vLRug",
-    authDomain: "cyn-wallet.firebaseapp.com",
-    projectId: "cyn-wallet",
-    storageBucket: "cyn-wallet.firebasestorage.app",
-    messagingSenderId: "921923481845",
-    appId: "1:921923481845:web:700498e8fc8f65024195bc",
-    measurementId: "G-STJWJB39MF"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
- </script>
 </body>
 </html>
+
