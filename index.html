@@ -1,59 +1,90 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cyn Wallet</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:15px Arial,sans-serif}
-header{background:#102b52;color:white;padding:22px 18px;font-size:20px;font-weight:700}
-.sub{font-size:12px;font-weight:400;color:#c8d8ef;margin-top:5px}
-main{max-width:760px;margin:22px auto;padding:0 14px}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6fb;color:#182238;font:15px Arial}
+header{background:#102b52;color:white;padding:22px;font-size:22px;font-weight:bold}
+.sub{font-size:13px;font-weight:normal;margin-top:6px;color:#c8d8ef}
+main{max-width:760px;margin:24px auto;padding:0 14px}
 .card{background:white;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px #172b4910}
-h2{font-size:18px;margin:0 0 16px}label{display:block;font-size:13px;color:#59677c;margin:12px 0 6px}
-input{width:100%;padding:13px;border:1px solid #d7deea;border-radius:9px;font-size:16px}
-button{border:0;border-radius:10px;padding:13px 16px;background:#1458a6;color:white;font-weight:700;cursor:pointer}
-button.secondary{background:#eaf1fb;color:#174c8c}
-button:disabled{opacity:.5}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-nav button{flex:1;min-width:100px}
 .balance{background:linear-gradient(135deg,#10396d,#1767b5);color:white}
-.small{font-size:13px;color:#738198}.balance .small{color:#d6e6ff}
-.amount{font-size:32px;font-weight:700;margin:10px 0}
-.row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf0f5}
-.row:last-child{border:0}.hidden{display:none}.error{color:#c22;font-size:13px;margin-top:10px}
-.status{color:#16834a;font-size:13px}.muted{color:#65748b}
+.small{font-size:13px;color:#738198}
+.balance .small{color:#d6e6ff}
+.amount{font-size:32px;font-weight:bold;margin:12px 0}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #edf0f5}
+.row:last-child{border:0}
+nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:13px;background:#1458a6;color:white;font-weight:bold;flex:1}
+button.secondary{background:#eaf1fb;color:#174c8c}
+.hidden{display:none}
+.status{color:#16834a}
+#error{color:#c22}
 </style>
 </head>
+
 <body>
-<header>Cyn Wallet<div class="sub">Personal wallet</div></header>
+
+<header>
+Cyn Wallet
+<div class="sub">Personal wallet</div>
+</header>
+
 <main>
-<section id="login" class="card">
-<h2>Sign in</h2>
-<label for="username">Username</label><input id="username" autocomplete="username" placeholder="Enter username">
-<label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter PIN">
-<button id="loginBtn" style="width:100%;margin-top:16px">Sign in</button>
-<div id="loginError" class="error"></div>
-<p class="small">Use the account credentials configured for this wallet.</p>
-</section>
-<section id="wallet" class="hidden">
+
+<div id="error" class="card hidden"></div>
+
 <nav>
-<button data-page="overview">Overview</button><button data-page="history" class="secondary">History</button><button data-page="send" class="secondary">Send</button><button data-page="bills" class="secondary">Bills</button><button id="logout" class="secondary">Sign out</button>
+<button onclick="page('overview')">Overview</button>
+<button class="secondary" onclick="page('history')">History</button>
+<button class="secondary" onclick="refreshWallet()">Refresh</button>
 </nav>
+
 <div id="overview" class="page">
-<div class="card balance"><div class="small">Available balance</div><div class="amount" id="balance">¥6,653,800</div><div class="small">CNY · Chinese Yuan</div></div>
-<div class="card"><h2>Account overview</h2><div class="row"><span class="muted">Account name</span><strong id="accountName">程的 Cheng Er34</strong></div><div class="row"><span class="muted">Account number</span><strong id="accountNumber">—</strong></div><div class="row"><span class="muted">Status</span><span class="status" id="accountStatus">Active</span></div></div>
-<div class="card"><h2>Recent activity</h2><div id="recent"></div></div>
+
+<div class="card balance">
+<div class="small">Available balance</div>
+<div class="amount" id="balance">Loading...</div>
+<div class="small" id="currency">CNY</div>
 </div>
-<div id="history" class="page hidden"><div class="card"><h2>Transaction history</h2><div id="transactions">No transactions available.</div></div></div>
-<div id="send" class="page hidden"><div class="card"><h2>Send money</h2><label>Recipient name</label><input id="recipient" placeholder="Full recipient name"><label>Recipient account</label><input id="recipientAccount" placeholder="Account number"><label>Amount (CNY)</label><input id="sendAmount" type="number" min="0.01" step="0.01" placeholder="0.00"><label>Note</label><input id="sendNote" placeholder="Optional note"><button id="sendBtn" style="margin-top:16px;width:100%">Continue</button><div id="sendMsg" class="error"></div></div></div>
-<div id="bills" class="page hidden"><div class="card"><h2>Bill payments</h2><label>Service</label><select id="billType" style="width:100%;padding:13px;border:1px solid #d7deea;border-radius:9px"><option>Electricity</option><option>Water</option><option>Internet</option><option>Mobile</option></select><label>Customer / meter number</label><input id="billCustomer" placeholder="Enter reference"><label>Amount (CNY)</label><input id="billAmount" type="number" min="0.01" step="0.01" placeholder="0.00"><button id="billBtn" style="margin-top:16px;width:100%">Continue</button><div id="billMsg" class="error"></div></div></div>
-</section>
+
+<div class="card">
+<h3>Account overview</h3>
+<div class="row"><span>Account name</span><strong id="accountName">—</strong></div>
+<div class="row"><span>Account number</span><strong id="accountNumber">—</strong></div>
+<div class="row"><span>Username</span><strong id="username">—</strong></div>
+<div class="row"><span>Account status</span><strong class="status" id="status">—</strong></div>
+</div>
+
+<div class="card">
+<h3>Recent activity</h3>
+<div id="recent">Loading...</div>
+</div>
+
+</div>
+
+<div id="history" class="page hidden">
+<div class="card">
+<h3>Transaction history</h3>
+<div id="transactions">Loading...</div>
+</div>
+</div>
+
 </main>
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,query,where,getDocs,doc,getDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,doc,getDoc,collection,getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 const firebaseConfig={
 apiKey:"AIzaSyCM47pBWKGK8pgsK_u47GPUnNBA78vLRug",
 authDomain:"cyn-wallet.firebaseapp.com",
@@ -63,36 +94,95 @@ messagingSenderId:"921923481845",
 appId:"1:921923481845:web:700498e8fc8f65024195bc",
 measurementId:"G-STJWJB39MF"
 };
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+const UID="Xn01IOvMgvfbAnkj09evtYK1Tco1";
+
 const $=id=>document.getElementById(id);
-let userDoc=null,accountData=null,historyRows=[];
-const fmt=n=>"¥"+Number(n||0).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:2});
-function showError(id,msg){$(id).textContent=msg}
-function switchPage(name){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$(name).classList.remove("hidden");document.querySelectorAll("nav button[data-page]").forEach(b=>b.className=b.dataset.page===name?"":"secondary")}
-function renderHistory(){const html=historyRows.length?historyRows.map(t=>`<div class="row"><span><strong>${escapeHtml(t.description||t.type||"Transaction")}</strong><br><span class="small">${escapeHtml(t.status||"")}</span></span><strong>${escapeHtml(t.amount||"")}</strong></div>`).join(""):"<p class='muted'>No transactions recorded.</p>";$("transactions").innerHTML=html;$("recent").innerHTML=historyRows.slice(0,3).map(t=>`<div class="row"><span>${escapeHtml(t.description||t.type||"Transaction")}</span><strong>${escapeHtml(t.amount||"")}</strong></div>`).join("")||"<p class='muted'>No recent activity.</p>"}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("loginBtn").onclick=async()=>{
-showError("loginError","");$("loginBtn").disabled=true;
-try{
-const uname=$("username").value.trim(),pin=$("pin").value.trim();
-if(!uname||!pin)throw Error("Enter username and PIN.");
-// Firebase Authentication uses the registered email identity; PIN is not sent as an email password.
-if(uname!=="程的 Cheng Er34")throw Error("Incorrect username.");
-const credential=await signInWithEmailAndPassword(auth,"chengdechengdechenger@gmail.com,pin);
-const q=query(collection(db,"users"),where("uid","==",credential.user.uid)),snap=await getDocs(q);
-if(snap.empty)throw Error("Wallet account not linked to this login.");
-userDoc=snap.docs[0].ref;accountData=snap.docs[0].data();
-$("login").classList.add("hidden");$("wallet").classList.remove("hidden");
-$("accountName").textContent=accountData.accountName||uname;$("accountNumber").textContent=accountData.accountNumber||accountData.accountNumber||"—";$("accountStatus").textContent=accountData.status||"Active";
-$("balance").textContent=accountData.balance||"¥6,653,800";
-const tx=await getDocs(collection(userDoc,"transactions"));historyRows=tx.docs.map(d=>d.data()).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderHistory();switchPage("overview");
-}catch(e){showError("loginError",e.message||"Sign in failed.");}
-finally{$("loginBtn").disabled=false}
+
+function money(value,currency){
+return (currency||"CNY")+" "+
+Number(value||0).toLocaleString("en-US",{
+minimumFractionDigits:0,
+maximumFractionDigits:2
+});
+}
+
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",
+'"':"&quot;","'":"&#39;"
+}[c]));
+}
+
+window.page=function(name){
+document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+$(name).classList.remove("hidden");
 };
-document.querySelectorAll("nav button[data-page]").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
-$("logout").onclick=async()=>{await signOut(auth);$("wallet").classList.add("hidden");$("login").classList.remove("hidden");$("pin").value=""};
-$("sendBtn").onclick=()=>showError("sendMsg","Please connect a secure transfer service before sending funds.");
-$("billBtn").onclick=()=>showError("billMsg","Please connect a secure bill-payment service before paying.");
+
+window.refreshWallet=async function(){
+$("error").classList.add("hidden");
+
+try{
+
+// Load your existing Firestore user document.
+const userRef=doc(db,"users",UID);
+const userSnap=await getDoc(userRef);
+
+if(!userSnap.exists()){
+throw Error("Firestore user document not found.");
+}
+
+const data=userSnap.data();
+
+// Display the saved account fields.
+$("accountName").textContent=data.accountName||"—";
+$("accountNumber").textContent=data.accountNumber||"—";
+$("username").textContent=data.username||"—";
+$("status").textContent=data.status||"—";
+
+$("balance").textContent=money(data.balance,data.currency);
+$("currency").textContent=data.currency||"CNY";
+
+// Read the transactions subcollection.
+const txSnap=await getDocs(collection(userRef,"transactions"));
+
+const rows=txSnap.docs.map(d=>d.data());
+
+rows.sort((a,b)=>{
+const timeA=a.createdAt?.seconds||0;
+const timeB=b.createdAt?.seconds||0;
+return timeB-timeA;
+});
+
+function transactionHTML(t){
+return `<div class="row">
+<span>${escapeHTML(t.description||t.type||"Transaction")}
+<br><span class="small">${escapeHTML(t.status||"")}</span>
+</span>
+<strong>${escapeHTML(t.amount??"")}</strong>
+</div>`;
+}
+
+$("transactions").innerHTML=rows.length
+?rows.map(transactionHTML).join("")
+:"<p>No transactions available.</p>";
+
+$("recent").innerHTML=rows.length
+?rows.slice(0,3).map(transactionHTML).join("")
+:"<p>No recent activity.</p>";
+
+}catch(e){
+$("error").textContent=e.message;
+$("error").classList.remove("hidden");
+}
+};
+
+refreshWallet();
+
 </script>
 </body>
 </html>
+
