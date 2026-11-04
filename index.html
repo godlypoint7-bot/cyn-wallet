@@ -1,35 +1,98 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CYN Wallet</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyn Wallet</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#17253b;font:15px Arial,sans-serif}header{background:#10233f;color:#fff;padding:22px}.brand{font-size:20px;font-weight:bold}.sub{opacity:.75;font-size:12px;margin-top:5px}main{max-width:620px;margin:auto;padding:18px}.card{background:#fff;border:1px solid #e5eaf2;border-radius:16px;padding:20px;margin-bottom:15px}h2{font-size:18px;margin:0 0 16px}label{display:block;font-size:13px;font-weight:bold;margin:13px 0 6px}input{width:100%;padding:14px;border:1px solid #d8dfeb;border-radius:10px;font-size:16px}button{border:0;border-radius:10px;padding:13px;font-weight:bold;cursor:pointer}.primary{background:#1769aa;color:white;width:100%;margin-top:18px}.secondary{background:#edf3fa;color:#1769aa;width:100%;margin-top:18px}.error{color:#b42318;font-size:13px;margin-top:10px}.hidden{display:none!important}.balancebox{background:#10233f;color:#fff}.small{font-size:13px;color:#d5e4f8}.balance{font-size:32px;font-weight:bold;margin-top:8px}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px}.muted{font-size:12px;color:#6b7890}.value{font-weight:bold;word-break:break-word;margin-top:4px}nav{display:flex;gap:8px;margin-bottom:15px}nav button{flex:1;background:#edf3fa;color:#1769aa}nav button.active{background:#10233f;color:white}.tx{padding:13px 0;border-bottom:1px solid #e5eaf2;display:flex;justify-content:space-between;gap:12px}.tx:last-child{border:0}.txmeta{font-size:12px;color:#6b7890;margin-top:4px}.amount{font-weight:bold;white-space:nowrap}.empty{text-align:center;color:#6b7890;padding:20px}
-</style></head><body><header><div class="brand">CYN WALLET</div><div class="sub">Personal wallet</div></header><main>
-<section id="login" class="card"><h2>Sign in</h2><form id="form"><label>Username</label><input id="username" value="程的 Cheng Er34" required><label>PIN</label><input id="pin" type="password" inputmode="numeric" required><button class="primary">Sign in</button><div id="err" class="error"></div></form></section>
-<section id="wallet" class="hidden"><div class="card balancebox"><div class="small">Available balance</div><div id="balance" class="balance">¥—</div></div>
-<nav><button class="active" data-tab="overview">Overview</button><button data-tab="history">History</button><button data-tab="account">Account</button></nav>
-<section id="overview" class="card"><h2>Account overview</h2><div class="details"><div><div class="muted">Account name</div><div id="name" class="value">—</div></div><div><div class="muted">Currency</div><div class="value">CNY (¥)</div></div><div><div class="muted">Account number</div><div id="number" class="value">—</div></div><div><div class="muted">Status</div><div id="status" class="value">—</div></div></div></section>
-<section id="history" class="card hidden"><h2>Transaction history</h2><div id="txs" class="empty">Loading…</div></section>
-<section id="account" class="card hidden"><h2>Account</h2><div class="muted">Username</div><div id="shown" class="value">—</div><button id="logout" class="secondary">Sign out</button></section></section>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:15px Arial,sans-serif}
+header{background:#102b52;color:white;padding:22px 18px;font-size:20px;font-weight:700}
+.sub{font-size:12px;font-weight:400;color:#c8d8ef;margin-top:5px}
+main{max-width:760px;margin:22px auto;padding:0 14px}
+.card{background:white;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px #172b4910}
+h2{font-size:18px;margin:0 0 16px}label{display:block;font-size:13px;color:#59677c;margin:12px 0 6px}
+input{width:100%;padding:13px;border:1px solid #d7deea;border-radius:9px;font-size:16px}
+button{border:0;border-radius:10px;padding:13px 16px;background:#1458a6;color:white;font-weight:700;cursor:pointer}
+button.secondary{background:#eaf1fb;color:#174c8c}
+button:disabled{opacity:.5}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav button{flex:1;min-width:100px}
+.balance{background:linear-gradient(135deg,#10396d,#1767b5);color:white}
+.small{font-size:13px;color:#738198}.balance .small{color:#d6e6ff}
+.amount{font-size:32px;font-weight:700;margin:10px 0}
+.row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf0f5}
+.row:last-child{border:0}.hidden{display:none}.error{color:#c22;font-size:13px;margin-top:10px}
+.status{color:#16834a;font-size:13px}.muted{color:#65748b}
+</style>
+</head>
+<body>
+<header>Cyn Wallet<div class="sub">Personal wallet</div></header>
+<main>
+<section id="login" class="card">
+<h2>Sign in</h2>
+<label for="username">Username</label><input id="username" autocomplete="username" placeholder="Enter username">
+<label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter PIN">
+<button id="loginBtn" style="width:100%;margin-top:16px">Sign in</button>
+<div id="loginError" class="error"></div>
+<p class="small">Use the account credentials configured for this wallet.</p>
+</section>
+<section id="wallet" class="hidden">
+<nav>
+<button data-page="overview">Overview</button><button data-page="history" class="secondary">History</button><button data-page="send" class="secondary">Send</button><button data-page="bills" class="secondary">Bills</button><button id="logout" class="secondary">Sign out</button>
+</nav>
+<div id="overview" class="page">
+<div class="card balance"><div class="small">Available balance</div><div class="amount" id="balance">¥6,653,800</div><div class="small">CNY · Chinese Yuan</div></div>
+<div class="card"><h2>Account overview</h2><div class="row"><span class="muted">Account name</span><strong id="accountName">程的 Cheng Er34</strong></div><div class="row"><span class="muted">Account number</span><strong id="accountNumber">—</strong></div><div class="row"><span class="muted">Status</span><span class="status" id="accountStatus">Active</span></div></div>
+<div class="card"><h2>Recent activity</h2><div id="recent"></div></div>
+</div>
+<div id="history" class="page hidden"><div class="card"><h2>Transaction history</h2><div id="transactions">No transactions available.</div></div></div>
+<div id="send" class="page hidden"><div class="card"><h2>Send money</h2><label>Recipient name</label><input id="recipient" placeholder="Full recipient name"><label>Recipient account</label><input id="recipientAccount" placeholder="Account number"><label>Amount (CNY)</label><input id="sendAmount" type="number" min="0.01" step="0.01" placeholder="0.00"><label>Note</label><input id="sendNote" placeholder="Optional note"><button id="sendBtn" style="margin-top:16px;width:100%">Continue</button><div id="sendMsg" class="error"></div></div></div>
+<div id="bills" class="page hidden"><div class="card"><h2>Bill payments</h2><label>Service</label><select id="billType" style="width:100%;padding:13px;border:1px solid #d7deea;border-radius:9px"><option>Electricity</option><option>Water</option><option>Internet</option><option>Mobile</option></select><label>Customer / meter number</label><input id="billCustomer" placeholder="Enter reference"><label>Amount (CNY)</label><input id="billAmount" type="number" min="0.01" step="0.01" placeholder="0.00"><button id="billBtn" style="margin-top:16px;width:100%">Continue</button><div id="billMsg" class="error"></div></div></div>
+</section>
 </main>
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,query,where,getDocs,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-/* Paste your Firebase Web config from Project settings > General here. */
-const config={apiKey:"AIzaSyCM47pBWKGK8pgsK_u47GPUnNBA78vLRug",authDomain:"cyn-wallet.firebaseapp.com",projectId:"cyn-wallet",storageBucket:"cyn-wallet.firebasestorage.app",messagingSenderId:"921923481845",appId:"1:921923481845:web:700498e8fc8f65024195bc",measurementId:"G-STJWJB39MF"};
-const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app);
-const WALLET_USERNAME="程的 Cheng Er34",AUTH_EMAIL="cheng.er34@cyn-wallet.com";
-const $=id=>document.getElementById(id),fmt=v=>"¥"+Number(String(v??0).replace(/[^0-9.-]/g,"")).toLocaleString("en-US",{maximumFractionDigits:2});
-$("form").addEventListener("submit",async e=>{e.preventDefault();$("err").textContent="";let b=e.submitter;b.disabled=true;b.textContent="Signing in…";
-try{if($("username").value.trim()!==WALLET_USERNAME)throw Error("bad login");
-const credential=await signInWithEmailAndPassword(auth,AUTH_EMAIL,$("pin").value);
-const q=query(collection(db,"users"),where("uid","==",credential.user.uid));const s=await getDocs(q);
-if(s.empty)throw Error("No linked wallet");const d=s.docs[0].data(),uid=s.docs[0].id;
-$("balance").textContent=fmt(d.balance);$("name").textContent=d.accountName||d.username||WALLET_USERNAME;$("number").textContent=d.accountNumber||"—";$("status").textContent=d.status||"—";$("shown").textContent=d.username||WALLET_USERNAME;
-$("login").classList.add("hidden");$("wallet").classList.remove("hidden");await loadTx(uid);
-}catch(x){$("err").textContent="Login failed. Check username/PIN and Authentication account setup."}
-finally{b.disabled=false;b.textContent="Sign in";$("pin").value=""}});
-async function loadTx(uid){let box=$("txs");box.innerHTML="";try{let s=await getDocs(query(collection(db,"users",uid,"transactions"),orderBy("createdAt","desc")));if(s.empty){box.textContent="No transactions yet.";return}
-s.forEach(doc=>{let t=doc.data(),r=document.createElement("div"),l=document.createElement("div"),a=document.createElement("div");r.className="tx";l.innerHTML='<div class="value"></div><div class="txmeta"></div>';l.querySelector(".value").textContent=t.description||t.type||"Transaction";let date=t.createdAt?.toDate?.();l.querySelector(".txmeta").textContent=date?date.toLocaleString():"";a.className="amount";a.textContent=(t.direction==="deposit"?"+":"−")+fmt(t.amount);r.append(l,a);box.append(r)})}catch(e){box.textContent="Unable to load transaction history."}}
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x===b));["overview","history","account"].forEach(id=>$(id).classList.toggle("hidden",id!==b.dataset.tab))});
-$("logout").onclick=async()=>{await signOut(auth);$("wallet").classList.add("hidden");$("login").classList.remove("hidden")};
-</script></body></html>
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig={
+apiKey:"AIzaSyCM47pBWKGK8pgsK_u47GPUnNBA78vLRug",
+authDomain:"cyn-wallet.firebaseapp.com",
+projectId:"cyn-wallet",
+storageBucket:"cyn-wallet.firebasestorage.app",
+messagingSenderId:"921923481845",
+appId:"1:921923481845:web:700498e8fc8f65024195bc",
+measurementId:"G-STJWJB39MF"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let userDoc=null,accountData=null,historyRows=[];
+const fmt=n=>"¥"+Number(n||0).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:2});
+function showError(id,msg){$(id).textContent=msg}
+function switchPage(name){document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$(name).classList.remove("hidden");document.querySelectorAll("nav button[data-page]").forEach(b=>b.className=b.dataset.page===name?"":"secondary")}
+function renderHistory(){const html=historyRows.length?historyRows.map(t=>`<div class="row"><span><strong>${escapeHtml(t.description||t.type||"Transaction")}</strong><br><span class="small">${escapeHtml(t.status||"")}</span></span><strong>${escapeHtml(t.amount||"")}</strong></div>`).join(""):"<p class='muted'>No transactions recorded.</p>";$("transactions").innerHTML=html;$("recent").innerHTML=historyRows.slice(0,3).map(t=>`<div class="row"><span>${escapeHtml(t.description||t.type||"Transaction")}</span><strong>${escapeHtml(t.amount||"")}</strong></div>`).join("")||"<p class='muted'>No recent activity.</p>"}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("loginBtn").onclick=async()=>{
+showError("loginError","");$("loginBtn").disabled=true;
+try{
+const uname=$("username").value.trim(),pin=$("pin").value.trim();
+if(!uname||!pin)throw Error("Enter username and PIN.");
+// Firebase Authentication uses the registered email identity; PIN is not sent as an email password.
+if(uname!=="程的 Cheng Er34")throw Error("Incorrect username.");
+const credential=await signInWithEmailAndPassword(auth,"cheng.er34@cyn-wallet.com",pin);
+const q=query(collection(db,"users"),where("uid","==",credential.user.uid)),snap=await getDocs(q);
+if(snap.empty)throw Error("Wallet account not linked to this login.");
+userDoc=snap.docs[0].ref;accountData=snap.docs[0].data();
+$("login").classList.add("hidden");$("wallet").classList.remove("hidden");
+$("accountName").textContent=accountData.accountName||uname;$("accountNumber").textContent=accountData.accountNumber||accountData.accountNumber||"—";$("accountStatus").textContent=accountData.status||"Active";
+$("balance").textContent=accountData.balance||"¥6,653,800";
+const tx=await getDocs(collection(userDoc,"transactions"));historyRows=tx.docs.map(d=>d.data()).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));renderHistory();switchPage("overview");
+}catch(e){showError("loginError",e.message||"Sign in failed.");}
+finally{$("loginBtn").disabled=false}
+};
+document.querySelectorAll("nav button[data-page]").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
+$("logout").onclick=async()=>{await signOut(auth);$("wallet").classList.add("hidden");$("login").classList.remove("hidden");$("pin").value=""};
+$("sendBtn").onclick=()=>showError("sendMsg","Please connect a secure transfer service before sending funds.");
+$("billBtn").onclick=()=>showError("billMsg","Please connect a secure bill-payment service before paying.");
+</script>
+</body>
+</html>
